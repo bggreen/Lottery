@@ -1,5 +1,6 @@
 import java.util.Random;
 
+@SuppressWarnings("javadoc")
 public class Pick_5 extends Ticket {
 
 	public Pick_5()

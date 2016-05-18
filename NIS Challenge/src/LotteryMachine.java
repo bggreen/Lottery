@@ -9,42 +9,42 @@ import java.util.Random;
  */
 public class LotteryMachine {
 
-	// Instance Variables 
+	// Instance Variables
 	private Ticket[] ticketTypes;
 	private int[] avaliableTickets;
-	public Ticket[][] allTickets;
+	private Ticket[][] allTickets;
 	private int[] winningTickets;
-	
+
 	//Constructor
 	/**
 	 * This class is the object representing the Lottery Machine in
 	 * the simulation.  This class is dependent on Ticket objects
 	 * @author  Brian Green
 	 * @version 2016.5.14
-	 * 
-	 * @param ticketArray - an array of Ticket Interface objects.  By 
-	 * passing in this interface allow the lottery machine to handle 
-	 * any number of types of tickets, even though we are only using 
+	 *
+	 * @param ticketArray - an array of Ticket Interface objects.  By
+	 * passing in this interface allow the lottery machine to handle
+	 * any number of types of tickets, even though we are only using
 	 * 3,4,5
-	 * 
-	 * @param ticketValues - an array of integers corresponding to the number 
-	 * of tickets of each type to generate.  Doing this creates a margin of 
-	 * user error but allows greater flexibility at run time 
+	 *
+	 * @param ticketValues - an array of integers corresponding to the number
+	 * of tickets of each type to generate.  Doing this creates a margin of
+	 * user error but allows greater flexibility at run time
 	 */
-	
+
 	public LotteryMachine(Ticket[] ticketArray, int[] ticketValues)
 	{
 		// Instantiate passed variables
 		this.ticketTypes = ticketArray;
 		this.avaliableTickets = ticketValues;
-		
+
 		// Save the winning ticket indexes
 		this.winningTickets = new int[avaliableTickets.length];
-		
+
 		// Make total ticket array large enough for all tickets
 		int ticketsMax = getLargestValueinArray(avaliableTickets);
 		this.allTickets = new Ticket[avaliableTickets.length][ticketsMax];
-		
+
 		// Populate the array with Tickets
 		for (int i = 0; i < this.avaliableTickets.length; i++)
 		{
@@ -69,12 +69,20 @@ public class LotteryMachine {
 			int winningIndex = chooseWinningIndex(this.avaliableTickets[i]);
 			this.winningTickets[i] = winningIndex;
 		}
-		
+
 	}
-	
+
 
 
 	//Public Methods
+	// ----------------------------------------------------------
+	/**
+	 * Given a class of ticket we will identify the number of tickets and
+	 * the class of them, each stored in an array and then, depending if there
+	 * are any tickets remaining will dispense a ticket
+	 * @param t the ticket class
+	 * @return the dispensed ticket object
+	 */
 	public Ticket dispenseTicket(Class<? extends Ticket> t)
 	{
 		// Get the index of the current ticket Type
@@ -88,40 +96,60 @@ public class LotteryMachine {
 				index = i;
 			}
 		}
-		// If no tickets left here return null 
+		// If no tickets left here return null
 		if(this.avaliableTickets[index] == 0)
 		{
 			return null;
 		}
-		// Get the ticket at that index 
+		// Get the ticket at that index
 		int ticketsReaminingIndex = this.avaliableTickets[index];
-		System.out.println("Buying ticket type:" + wantedClass.getName() + ", ticket numer: " + ticketsReaminingIndex);	
+		System.out.println("Buying ticket type:" + wantedClass.getName() + ", ticket numer: " + ticketsReaminingIndex);
 		Ticket dispensedTicket = this.allTickets[index][ticketsReaminingIndex-1];
-		
+
 		// Decrement the index
 		this.avaliableTickets[index] = ticketsReaminingIndex-1;
-		
+
 		// Return Ticket
 		return dispensedTicket;
 	}
-	
+
+	// ----------------------------------------------------------
+	/**
+	 * Given the index of the type based on the type array eg: {pick3, pick4}
+	 * index of pick4 is 1, get the stored winning ticket
+	 *
+	 * By doing things this way we save the winning ticket and make the
+	 * efficiency O(1) for a call
+	 *
+	 * @param indexOfType
+	 * @return the winning ticket
+	 */
 	public Ticket getWinner(int indexOfType )
 	{
 		int indexOfTicket = this.winningTickets[indexOfType];
 		Ticket winner = allTickets[indexOfType][indexOfTicket];
 		return winner;
 	}
-	
-	public int[] getWinners()
+
+	@SuppressWarnings("javadoc")
+    public int[] getWinners()
 	{
 		return this.winningTickets;
 	}
-	public Ticket[] getTicketTypes()
+	@SuppressWarnings("javadoc")
+    public Ticket[] getTicketTypes()
 	{
 		return this.ticketTypes;
 	}
-	
-	public boolean checkIfEmpty()
+
+    // ----------------------------------------------------------
+    /**
+     * We use an array of values to represent the number of tickets left
+     * This method checks if there are any tickets left at all.
+     *
+     * @return true if empty false otherwise
+     */
+    public boolean checkIfEmpty()
 	{
 		for (int i = 0; i < avaliableTickets.length; i++)
 		{
@@ -135,7 +163,7 @@ public class LotteryMachine {
 	// Private Methods
 	/**
 	 * Super basic random number generator
-	 * 
+	 *
 	 * @param i - the max random number
 	 */
 	private int chooseWinningIndex(int i) {
@@ -146,10 +174,10 @@ public class LotteryMachine {
 
 	/**
 	 * Basic max function for an array of ints
-	 * 
-	 * I could have used Collections ->List-> Max but 
+	 *
+	 * I could have used Collections ->List-> Max but
 	 * this is purely practice for myself
-	 * 
+	 *
 	 * @param array - An integer array to get the largest value
 	 */
 	private int getLargestValueinArray(int[] array)
@@ -164,5 +192,5 @@ public class LotteryMachine {
 		}
 		return max;
 	}
-	
+
 }
